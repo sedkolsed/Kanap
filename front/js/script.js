@@ -15,11 +15,11 @@ fetch ("http://localhost:3000/api/products")
 
 
 
-function canapes(index) {
+function canapes(articles) {
   
   let products = document.querySelector("#items");
  
-  for (let article of index) {
+  for (let article of articles) {
    
     products.innerHTML += `<a href="./product.html?_id=${article._id}">
     <article>
