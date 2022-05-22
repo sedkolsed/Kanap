@@ -5,6 +5,12 @@ const url = new URLSearchParams(queryString);
 const productId = url.get("_id");
 console.log ({productId});
 
+// variables pour localStorage
+let priceArticle = 0;
+let altenativeTxt = "";
+let imgUrl = "";
+let nameArticle = "";
+
 // requête sur l'id du produit et appel de la fonction productData
 fetch(`http://localhost:3000/api/products/${productId}`)
 .then((response) => response.json() )
@@ -13,7 +19,6 @@ fetch(`http://localhost:3000/api/products/${productId}`)
                 productData(res);
             }
 )
-
 
 // création de la fonction productData
 function productData (kanap){
@@ -24,15 +29,19 @@ function productData (kanap){
     const name = kanap.name;
     const price = kanap.price;
     const description = kanap.description;
+    priceArticle = price;
+    altenativeTxt = altTxt;
+    imgUrl = imageUrl ;
+    nameArticle = name ;
     imageKanap ( imageUrl, altTxt);
     nameKanap(name);
     priceKanap(price);
     descriptionKanap(description);
     colorsKanap(colors);
-
+    
 }
 
-
+// fonctions d'affichage du produit
 function imageKanap (imageUrl, altTxt){
     const img = document.createElement('img');
     img.src = imageUrl;
@@ -80,10 +89,15 @@ addBasket.addEventListener("click", (e)=> {
     // Valeurs à stocker sur localStorage
     const localData = {
         productId : productId ,
-        quantity : quantity,
+        quantity : Number(quantity),
         color :color ,  
+        price : priceArticle ,
+        altTxt : altenativeTxt,
+        imageUrl : imgUrl,
+        name : nameArticle ,
 
     }
+    // commande stockage local
     localStorage.setItem(productId, JSON.stringify(localData));
     window.location.href="cart.html";
 } )
