@@ -87,6 +87,7 @@ addBasket.addEventListener("click", (e)=> {
         return;
     }
     // Valeurs à stocker sur localStorage
+    const key = `${productId}-${color}`;
     const localData = {
         productId : productId ,
         quantity : Number(quantity),
@@ -98,7 +99,7 @@ addBasket.addEventListener("click", (e)=> {
 
     }
     // commande stockage local
-    localStorage.setItem(productId, JSON.stringify(localData));
+    localStorage.setItem(key, JSON.stringify(localData));
     window.location.href="cart.html";
 } )
 }

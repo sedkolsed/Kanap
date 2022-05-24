@@ -2,6 +2,10 @@ const itemsInStorage = localStorage.length;
 console.log("il y en a :" ,itemsInStorage) ;
 const orderList = [];
 
+
+
+
+
 for (let i = 0; i < itemsInStorage ; i++ ){
   const item = localStorage.getItem(localStorage.key(i));
   const itemObject = JSON.parse(item);
@@ -35,7 +39,24 @@ for (let article of orderList) {
   </div>
   </div>
   </article> `
+  
+  
 }
+
+// écoute sur les changements de quantités
+
+// listenQuantity();
+
+// function listenQuantity (){
+//   const changeQuantity = document.querySelector(".itemQuantity");
+//   changeQuantity.addEventListener("input" ,  () => updateQuantity());
+// }
+// function updateQuantity() {
+  
+  
+//   console.log(orderList);
+// }
+
 // quantité totale des articles
 
 displayTotalQuantity();
@@ -45,18 +66,16 @@ function displayTotalQuantity (){
   const totalQuantity = document.querySelector ("#totalQuantity");
 
   orderList.forEach((object)=> {
-    const totalQuantityObject = object.quantity ++ ;
+    const totalQuantityObject = object.quantity  ;
     total += totalQuantityObject;
   })
 
     totalQuantity.textContent = total;
-
-
-  
   
 }
 
 // calcul du prix total 
+ 
 displayTotalPrice();
 
 function displayTotalPrice(){
@@ -70,6 +89,7 @@ function displayTotalPrice(){
 
     totalPrice.textContent = total ;   
   }
+
   
   
   
