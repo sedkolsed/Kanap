@@ -41,8 +41,18 @@ for (let article of orderList) {
 displayTotalQuantity();
 
 function displayTotalQuantity (){
+  let total = 0 ;
   const totalQuantity = document.querySelector ("#totalQuantity");
-  totalQuantity.textContent = "yeah";
+
+  orderList.forEach((object)=> {
+    const totalQuantityObject = object.quantity ++ ;
+    total += totalQuantityObject;
+  })
+
+    totalQuantity.textContent = total;
+
+
+  
   
 }
 
@@ -57,7 +67,7 @@ function displayTotalPrice(){
     const totalPriceByObject = object.price * object.quantity;
     total += totalPriceByObject;
     });
-    
+
     totalPrice.textContent = total ;   
   }
   
