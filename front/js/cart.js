@@ -1,11 +1,12 @@
+// taille du localStorage & création de orderList.....................................................
 const itemsInStorage = localStorage.length;
-console.log("il y en a :" ,itemsInStorage) ;
+console.log(itemsInStorage) ;
 const orderList = [];
 
 
 
 
-
+// boucle des objets de localStorage vers orderList..............................................
 for (let i = 0; i < itemsInStorage ; i++ ){
   const item = localStorage.getItem(localStorage.key(i));
   const itemObject = JSON.parse(item);
@@ -14,6 +15,7 @@ for (let i = 0; i < itemsInStorage ; i++ ){
 }
 console.log(orderList);
 
+// Affichage dynamique de chaque article de orderList..........................................
 let products = document.querySelector("#cart__items");
 
 for (let article of orderList) {
@@ -43,21 +45,27 @@ for (let article of orderList) {
   
 }
 
-// écoute sur les changements de quantités
+// écoute sur les changements de quantités........................................
 
-// listenQuantity();
+listenQuantity();
 
-// function listenQuantity (){
-//   const changeQuantity = document.querySelector(".itemQuantity");
-//   changeQuantity.addEventListener("input" ,  () => updateQuantity());
-// }
-// function updateQuantity() {
+function listenQuantity (){
+  const changeQuantity = document.querySelector (".itemQuantity");
+  changeQuantity.addEventListener("input" ,  () => updateQuantity());
+}
+function updateQuantity() {
   
   
-//   console.log(orderList);
-// }
+  console.log(orderList);
+}
 
-// quantité totale des articles
+// suppression des articles....................................................
+
+
+
+
+
+// quantité totale des articles...............................................
 
 displayTotalQuantity();
 
@@ -74,7 +82,7 @@ function displayTotalQuantity (){
   
 }
 
-// calcul du prix total 
+// calcul du prix total........................................
  
 displayTotalPrice();
 
@@ -92,4 +100,48 @@ function displayTotalPrice(){
 
   
   
+  //  formulaire.........................................
+
+  const orderButton = document.querySelector("#order");
+  orderButton.addEventListener("click", (e) => storeForm(e));
+
+
+  function storeForm (e){
+    e.preventDefault ();
+    if (orderList.length === 0 ) alert("Votre panier est vide !");
+    const form = document.querySelector(".cart__order__form");
+    console.log(form.elements);
+    const dataForm = dataFormArray();
+  //   fetch ("http://localhost:3000/api/products/order",{
+  //   method : "POST",
+  //      headers: { 
+  //   'Accept': 'application/json', 
+  //   'Content-Type': 'application/json' 
+  //   },
+  //     body: JSON.stringify(dataForm)
+      
+    
+  // })
+  //     .then((res)=>res.json())
+  //     .then((data) => console.log(data))
   
+   
+  }
+
+  function dataFormArray(){
+    const dataOrder = {
+      contact :{
+        firstName : "a" ,
+        lastName : "b",
+        adress : "c",
+        city : "d",
+        email : "e"
+      },
+      products : ["998787879809808"]
+
+    }
+    return dataOrder;
+  }
+
+
+  // validation du formulaire.....................................

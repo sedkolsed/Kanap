@@ -1,3 +1,4 @@
+// requête sur les produits de l'api............................................................
 fetch ("http://localhost:3000/api/products")
 .then (function(res){
     if (res.ok){
@@ -14,7 +15,7 @@ fetch ("http://localhost:3000/api/products")
 
 
 
-
+// affichage de tous les articles..............................................................
 function canapes(articles) {
   
   let products = document.querySelector("#items");
