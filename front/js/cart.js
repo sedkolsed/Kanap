@@ -3,6 +3,8 @@ const itemsInStorage = localStorage.length;
 console.log(itemsInStorage);
 const orderList = [];
 
+// let priceHidden = 0;
+
 // boucle des objets de localStorage vers orderList..............................................
 for (let i = 0; i < itemsInStorage; i++) {
   const item = localStorage.getItem(localStorage.key(i));
@@ -15,6 +17,14 @@ console.log(orderList);
 let products = document.querySelector("#cart__items");
 
 for (let article of orderList) {
+  console.log(article.productId);
+  let productId = article.productId;
+
+  // priceHidden = priceApi(productId);
+  // function priceH(priceHidden) {
+  //   console.log(priceHidden);
+  //   return priceHidden;
+  // }
   products.innerHTML += `<article class="cart__item" data-id="${article.productId}" data-color="${article.color}">
   <div class="cart__item__img">
   <img src="${article.imageUrl}" alt=${article.altTxt}>
@@ -38,6 +48,23 @@ for (let article of orderList) {
   </article> `;
 }
 
+// fonction de récupération du prix de l'article sur l'API.......................................
+// async function priceApi(productId) {
+//   fetch(`http://localhost:3000/api/products/${productId}`)
+//     .then((response) => response.json())
+//     .then((res) => {
+//       priceHidden = priceH(res.price);
+
+//       // console.log(res);
+//       console.log(priceHidden);
+//       return priceHidden;
+//     });
+//   // console.log(priceHidden);
+//   // return price;
+
+//   // console.log(productId);
+// }
+
 // écoute sur les changements de quantités........................................
 
 listenQuantity();
@@ -54,6 +81,19 @@ function updateQuantity() {
 }
 
 // suppression des articles....................................................
+
+eraseItem();
+
+function eraseItem() {
+  const eraseItem = document.querySelectorAll(".deleteItem");
+  console.log(eraseItem);
+  eraseItem.forEach((section) => {
+    section.addEventListener("click", () => eraseObject());
+  });
+}
+function eraseObject() {
+  console.log(orderList);
+}
 
 // quantité totale des articles...............................................
 
