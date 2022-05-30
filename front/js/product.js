@@ -62,25 +62,30 @@ function colorsKanap(colors) {
 
 // Section bouton panier...................................................
 const orderButton = document.querySelector("#addToCart");
+const oldBasket = [];
+let newBasket = [];
+const finalBasket = [];
 
 if (orderButton != null) {
   orderButton.addEventListener("click", (e) => atClick(e));
 }
 
 function atClick() {
+  alreadyInBasket();
+
   const color = document.querySelector("#colors").value;
   const quantity = document.querySelector("#quantity").value;
   if (noColorAndQuantity(color, quantity)) return;
-  toLocalStorage(color, quantity);
-  redirectToCart();
+  toNewBasket(color, quantity);
+
+  // redirectToCart();
 }
 
-function toLocalStorage(color, quantity) {
-  const newBasket = {
-    id: productId,
-    color: color,
-    quantity: Number(quantity),
-  };
+function toNewBasket(color, quantity) {
+  let id = productId;
+  newBasket = [id, color, Number(quantity)];
+  id, color, quantity;
+
   localStorage.setItem(productId, JSON.stringify(newBasket));
 }
 
@@ -100,11 +105,13 @@ function redirectToCart() {
 // :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 // boucle des objets de localStorage vers oldBasket..............................................
-const itemsInStorage = localStorage.length;
-const oldBasket = [];
-for (let i = 0; i < itemsInStorage; i++) {
-  const item = localStorage.getItem(localStorage.key(i));
-  const itemObject = JSON.parse(item);
-  oldBasket.push(itemObject);
+function alreadyInBasket() {
+  const itemsInStorage = localStorage.length;
+  console.log(itemsInStorage);
+  for (let i = 0; i < itemsInStorage; i++) {
+    const item = localStorage.getItem(localStorage.key(i));
+    const itemObject = JSON.parse(item);
+    oldBasket.push(itemObject);
+    console.log(oldBasket);
+  }
 }
-console.log(oldBasket);
