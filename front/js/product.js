@@ -4,6 +4,7 @@ console.log(queryString);
 const url = new URLSearchParams(queryString);
 const productId = url.get("_id");
 console.log({ productId });
+// console.log(prout);
 
 // requête sur l'id du produit et appel de la fonction productData..........................
 fetch(`http://localhost:3000/api/products/${productId}`)
@@ -13,7 +14,7 @@ fetch(`http://localhost:3000/api/products/${productId}`)
     productData(res);
   });
 
-// création de la fonction productData......................................................
+// création de la fonction productData et appel des fonctions d'affichage......................................................
 function productData(kanap) {
   const imageUrl = kanap.imageUrl;
   const altTxt = kanap.altTxt;
@@ -33,6 +34,7 @@ function productData(kanap) {
 }
 
 // fonctions d'affichage du produit.........................................................
+
 function imageKanap(imageUrl, altTxt) {
   const img = document.createElement("img");
   img.src = imageUrl;
@@ -59,36 +61,27 @@ function colorsKanap(colors) {
     select.appendChild(option);
   });
 }
+// pointe le bouton "Ajouter au panier" et création de l'event AtClick...............................
 
-// Section bouton panier...................................................
 const orderButton = document.querySelector("#addToCart");
-const oldBasket = [];
-let newBasket = [];
-const finalBasket = [];
-
 if (orderButton != null) {
   orderButton.addEventListener("click", (e) => atClick(e));
 }
 
-function atClick() {
-  alreadyInBasket();
+// Section panier::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
+let product = {};
+
+// recupère les valeurs de la couleur et de la quantité et gère leur absence avec noColorAndQuantity........................
+function atClick() {
   const color = document.querySelector("#colors").value;
   const quantity = document.querySelector("#quantity").value;
   if (noColorAndQuantity(color, quantity)) return;
-  toNewBasket(color, quantity);
-
+  newProduct(color, quantity);
+  addBasket(product);
   // redirectToCart();
 }
-
-function toNewBasket(color, quantity) {
-  let id = productId;
-  newBasket = [id, color, Number(quantity)];
-  id, color, quantity;
-
-  localStorage.setItem(productId, JSON.stringify(newBasket));
-}
-
+//  génère un message d'erreur en l'absence de la couleur ou de la quantité et empêche l'ajout au panier.................
 function noColorAndQuantity(color, quantity) {
   if (color === "" || color == null) {
     alert("Selectionnez une couleur");
@@ -99,19 +92,40 @@ function noColorAndQuantity(color, quantity) {
     return true;
   }
 }
+function newProduct(color, quantity) {
+  product = {
+    id: productId,
+    color: color,
+    quantity: Number(quantity),
+  };
+}
 function redirectToCart() {
   window.location.href = "cart.html";
 }
 // :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-// boucle des objets de localStorage vers oldBasket..............................................
-function alreadyInBasket() {
-  const itemsInStorage = localStorage.length;
-  console.log(itemsInStorage);
-  for (let i = 0; i < itemsInStorage; i++) {
-    const item = localStorage.getItem(localStorage.key(i));
-    const itemObject = JSON.parse(item);
-    oldBasket.push(itemObject);
-    console.log(oldBasket);
+function saveBasket(newBasket) {
+  localStorage.setItem("panierlocal", JSON.stringify(newBasket));
+}
+
+function getBasket() {
+  let basket = localStorage.getItem("panierlocal");
+  if (basket == null) {
+    return [];
+  } else {
+    return JSON.parse(basket);
   }
+}
+
+function addBasket(product) {
+  let basket = getBasket();
+  let foundProduct = basket.find(
+    (p) => p.id == product.id && p.color == product.color
+  );
+  if (foundProduct != undefined) {
+    foundProduct.quantity += product.quantity;
+  } else {
+    basket.push(product);
+  }
+  saveBasket(basket);
 }
