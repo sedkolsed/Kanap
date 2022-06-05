@@ -79,6 +79,7 @@ function atClick() {
   if (noColorAndQuantity(color, quantity)) return;
   newProduct(color, quantity);
   addBasket(product);
+
   // redirectToCart();
 }
 //  génère un message d'erreur en l'absence de la couleur ou de la quantité et empêche l'ajout au panier.................
@@ -105,6 +106,13 @@ function redirectToCart() {
 // :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 function saveBasket(newBasket) {
+  newBasket.sort(function compare(a, b) {
+    if (a.id < b.id) return -1;
+    if (a.id > b.id) return 1;
+    if (a.color < b.color) return -1;
+    if (a.color > b.color) return 1;
+    return 0;
+  });
   localStorage.setItem("panierlocal", JSON.stringify(newBasket));
 }
 
