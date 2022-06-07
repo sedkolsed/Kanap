@@ -22,10 +22,10 @@ function productData(kanap) {
   const name = kanap.name;
   const price = kanap.price;
   const description = kanap.description;
-  priceArticle = price;
-  altenativeTxt = altTxt;
-  imgUrl = imageUrl;
-  nameArticle = name;
+  // priceArticle = price;
+  // altenativeTxt = altTxt;
+  // // imgUrl = imageUrl;
+  // nameArticle = name;
   imageKanap(imageUrl, altTxt);
   nameKanap(name);
   priceKanap(price);
@@ -80,7 +80,7 @@ function atClick() {
   newProduct(color, quantity);
   addBasket(product);
 
-  // redirectToCart();
+  redirectToCart();
 }
 //  génère un message d'erreur en l'absence de la couleur ou de la quantité et empêche l'ajout au panier.................
 function noColorAndQuantity(color, quantity) {
@@ -93,6 +93,7 @@ function noColorAndQuantity(color, quantity) {
     return true;
   }
 }
+// création du nouvel objet product.............................................................................
 function newProduct(color, quantity) {
   product = {
     id: productId,
@@ -100,11 +101,12 @@ function newProduct(color, quantity) {
     quantity: Number(quantity),
   };
 }
+// redirection vers la page panier.......................................................................
 function redirectToCart() {
   window.location.href = "cart.html";
 }
-// :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
+// sauvegarde du nouveau panier trié dans le localStorage................................................
 function saveBasket(newBasket) {
   newBasket.sort(function compare(a, b) {
     if (a.id < b.id) return -1;
@@ -115,7 +117,7 @@ function saveBasket(newBasket) {
   });
   localStorage.setItem("panierlocal", JSON.stringify(newBasket));
 }
-
+// récupération du panier existant....................................................................
 function getBasket() {
   let basket = localStorage.getItem("panierlocal");
   if (basket == null) {
@@ -124,7 +126,7 @@ function getBasket() {
     return JSON.parse(basket);
   }
 }
-
+// ajoute le produit au panier en interrogeant le panier existant......................................
 function addBasket(product) {
   let basket = getBasket();
   let foundProduct = basket.find(
