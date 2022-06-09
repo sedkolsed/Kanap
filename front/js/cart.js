@@ -1,18 +1,23 @@
-// taille du localStorage & création de orderList.....................................................
-const itemsInStorage = localStorage.length;
-console.log(itemsInStorage);
-const orderList = [];
+let productList;
+let empty = document.querySelector("#cartAndFormContainer");
 
-// boucle des objets de localStorage vers orderList..............................................
-for (let i = 0; i < itemsInStorage; i++) {
-  const item = localStorage.getItem(localStorage.key(i));
-  const itemObject = JSON.parse(item);
-  orderList.push(itemObject);
+// récupération de localStorage et gestion de panier vide.........................................
+
+getBasket();
+function getBasket() {
+  let basket = localStorage.getItem("panierlocal");
+  if (basket == null) {
+    empty.innerHTML = `<h1>Votre panier est vide</h1>`;
+    return [];
+  } else {
+    productList = JSON.parse(basket);
+  }
 }
+
+console.log(productList);
 
 // Affichage dynamique de chaque article de orderList..........................................
 
-let productList = orderList[0];
 let products = document.querySelector("#cart__items");
 
 for (let element of productList) {
@@ -49,18 +54,18 @@ for (let element of productList) {
 
 // écoute sur les changements de quantités........................................
 
-// listenQuantity();
+listenQuantity();
 
-// function listenQuantity() {
-//   const changeQuantity = document.querySelectorAll(".itemQuantity");
-//   console.log(changeQuantity);
-//   changeQuantity.forEach((section) => {
-//     section.addEventListener("input", () => updateQuantity());
-//   });
-// }
-// function updateQuantity() {
-//   console.log("changement de quantité");
-// }
+function listenQuantity() {
+  const changeQuantity = document.querySelectorAll(".itemQuantity");
+  console.log(changeQuantity);
+  changeQuantity.forEach((section) => {
+    section.addEventListener("input", () => updateQuantity());
+  });
+}
+function updateQuantity() {
+  console.log("changement de quantité");
+}
 
 // suppression des articles....................................................
 
