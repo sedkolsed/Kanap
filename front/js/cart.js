@@ -49,38 +49,42 @@ for (let element of productList) {
       </div>
       </div>
       </article> `;
+      listenQuantity(productId);
+      eraseItem(productId);
     });
 }
 
 // écoute sur les changements de quantités........................................
 
-listenQuantity();
-
-function listenQuantity() {
-  const changeQuantity = document.querySelectorAll(".itemQuantity");
+function listenQuantity(productId) {
+  console.log(productId);
+  let changeQuantity = document.querySelectorAll(".itemQuantity");
   console.log(changeQuantity);
+  // changeQuantity.addEventListener("input", console.log(productId));
+
   changeQuantity.forEach((section) => {
-    section.addEventListener("input", () => updateQuantity());
+    section.addEventListener("input", () => console.log(productId));
+
+    console.log(productId);
   });
 }
-function updateQuantity() {
-  console.log("changement de quantité");
+
+function updateQuantity(productId) {
+  console.log(productId);
 }
 
 // suppression des articles....................................................
 
-// eraseItem();
-
-// function eraseItem() {
-//   const eraseItem = document.querySelectorAll(".deleteItem");
-//   console.log(eraseItem);
-//   eraseItem.forEach((section) => {
-//     section.addEventListener("click", () => eraseObject());
-//   });
-// }
-// function eraseObject() {
-//   console.log(orderList);
-// }
+function eraseItem(productId) {
+  const eraseItem = document.querySelectorAll(".deleteItem");
+  console.log(eraseItem);
+  eraseItem.forEach((section) => {
+    section.addEventListener("click", () => eraseObject(productId));
+  });
+}
+function eraseObject(productId) {
+  console.log(productId);
+}
 
 // quantité totale des articles...............................................
 
@@ -121,40 +125,41 @@ function displayTotalPrice() {
 
 // //  formulaire.........................................
 
-// const orderButton = document.querySelector("#order");
-// orderButton.addEventListener("click", (e) => storeForm(e));
+const orderButton = document.querySelector("#order");
+orderButton.addEventListener("click", (e) => storeForm(e));
 
-// function storeForm(e) {
-//   e.preventDefault();
-//   if (orderList.length === 0) alert("Votre panier est vide !");
-//   const form = document.querySelector(".cart__order__form");
-//   console.log(form.elements);
-//   const dataForm = dataFormArray();
-//   //   fetch ("http://localhost:3000/api/products/order",{
-//   //   method : "POST",
-//   //      headers: {
-//   //   'Accept': 'application/json',
-//   //   'Content-Type': 'application/json'
-//   //   },
-//   //     body: JSON.stringify(dataForm)
+function storeForm(e) {
+  e.preventDefault();
+  // if (productList.length === 0) alert("Votre panier est vide !");
+  const form = document.querySelector(".cart__order__form");
+  console.log(form.elements);
+  const dataForm = dataFormArray();
+  console.log(dataForm);
 
-//   // })
-//   //     .then((res)=>res.json())
-//   //     .then((data) => console.log(data))
-// }
+  fetch("http://localhost:3000/api/products/order", {
+    method: "POST",
+    body: JSON.stringify(dataForm),
+    headers: {
+      // Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+  })
+    .then((res) => res.json())
+    .then((data) => console.log(data));
+}
 
-// function dataFormArray() {
-//   const dataOrder = {
-//     contact: {
-//       firstName: "a",
-//       lastName: "b",
-//       adress: "c",
-//       city: "d",
-//       email: "e",
-//     },
-//     products: ["998787879809808"],
-//   };
-//   return dataOrder;
-// }
+function dataFormArray() {
+  const dataOrder = {
+    contact: {
+      firstName: "a",
+      lastName: "b",
+      address: "c",
+      city: "d",
+      email: "e",
+    },
+    products: ["055743915a544fde83cfdfc904935ee7"],
+  };
+  return dataOrder;
+}
 
 // // validation du formulaire.....................................
