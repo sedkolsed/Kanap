@@ -19,11 +19,11 @@ console.log(productList);
 // Affichage dynamique de chaque article de orderList..........................................
 
 let products = document.querySelector("#cart__items");
+let productsArray = [];
 
 for (let element of productList) {
   let productId = element.id;
-
-  console.log(productId);
+  getIdLocaleStorage(productId);
 
   fetch(`http://localhost:3000/api/products/${productId}`)
     .then((response) => response.json())
@@ -123,18 +123,18 @@ function displayTotalPrice() {
   });
 }
 
-// //  formulaire.........................................
+// //  formulaire:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 const orderButton = document.querySelector("#order");
+
 orderButton.addEventListener("click", (e) => storeForm(e));
 
+// requête fetch POST sur l'API....................................................
 function storeForm(e) {
+  const dataForm = dataFormArray();
   e.preventDefault();
   // if (productList.length === 0) alert("Votre panier est vide !");
-  const form = document.querySelector(".cart__order__form");
-  console.log(form.elements);
-  const dataForm = dataFormArray();
-  console.log(dataForm);
+  // console.log(form.elements);
 
   fetch("http://localhost:3000/api/products/order", {
     method: "POST",
@@ -148,18 +148,32 @@ function storeForm(e) {
     .then((data) => console.log(data));
 }
 
+// données à envoyer à l'API.............................................
 function dataFormArray() {
+  const form = document.querySelector(".cart__order__form");
+
+  const firstName = form.elements.firstName.value;
+  const lastName = form.elements.lastName.value;
+  const address = form.elements.address.value;
+  const city = form.elements.city.value;
+  const email = form.elements.email.value;
+
   const dataOrder = {
     contact: {
-      firstName: "a",
-      lastName: "b",
-      address: "c",
-      city: "d",
-      email: "e",
+      firstName: firstName,
+      lastName: lastName,
+      address: address,
+      city: city,
+      email: email,
     },
-    products: ["055743915a544fde83cfdfc904935ee7"],
+    products: productsArray,
   };
   return dataOrder;
 }
 
+// recupère les Id dans uns seul array....................................
+function getIdLocaleStorage(productId) {
+  productsArray.push(productId);
+}
+console.log(productsArray);
 // // validation du formulaire.....................................
