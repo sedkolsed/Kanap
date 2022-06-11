@@ -150,7 +150,10 @@ function storeForm(e) {
     },
   })
     .then((res) => res.json())
-    .then((data) => console.log(data));
+    .then((data) => {
+      redirectToConfirmation(data);
+      // return console.log(data);
+    });
 }
 
 // données à envoyer à l'API.............................................
@@ -265,4 +268,9 @@ function formEmail() {
   } else {
     document.querySelector("#emailErrorMsg").innerHTML = "";
   }
+}
+// redirection vers la page de confirmation......................................
+function redirectToConfirmation(data) {
+  const orderId = data.orderId;
+  window.location.href = "confirmation.html" + "?orderId=" + orderId;
 }
