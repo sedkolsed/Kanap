@@ -269,7 +269,7 @@ function formEmail() {
     document.querySelector("#emailErrorMsg").innerHTML = "";
   }
 }
-// redirection vers la page de confirmation......................................
+// redirection vers la page de confirmation avec le nuréro de commande......................................
 function redirectToConfirmation(data) {
   const orderId = data.orderId;
   window.location.href = "confirmation.html" + "?orderId=" + orderId;
