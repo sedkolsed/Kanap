@@ -199,19 +199,13 @@ let regexEmail =
 // getion des erreurs du formulaire..................................................
 
 function wrongForm() {
-  if (formFirstName()) {
-    return true;
-  }
-  if (formLastName()) {
-    return true;
-  }
-  if (formAddress()) {
-    return true;
-  }
-  if (formCity()) {
-    return true;
-  }
-  if (formEmail()) {
+  if (
+    formFirstName() |
+    formLastName() |
+    formAddress() |
+    formCity() |
+    formEmail()
+  ) {
     return true;
   }
   return;
