@@ -4,7 +4,6 @@ console.log(queryString);
 const url = new URLSearchParams(queryString);
 const productId = url.get("_id");
 console.log({ productId });
-// console.log(prout);
 
 // requête sur l'id du produit et appel de la fonction productData..........................
 fetch(`http://localhost:3000/api/products/${productId}`)
@@ -22,10 +21,7 @@ function productData(kanap) {
   const name = kanap.name;
   const price = kanap.price;
   const description = kanap.description;
-  // priceArticle = price;
-  // altenativeTxt = altTxt;
-  // // imgUrl = imageUrl;
-  // nameArticle = name;
+
   imageKanap(imageUrl, altTxt);
   nameKanap(name);
   priceKanap(price);

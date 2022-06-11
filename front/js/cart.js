@@ -133,9 +133,14 @@ orderButton.addEventListener("click", (e) => storeForm(e));
 function storeForm(e) {
   const dataForm = dataFormArray();
   e.preventDefault();
-  // if (productList.length === 0) alert("Votre panier est vide !");
-  // console.log(form.elements);
+  if (productList.length === 0) {
+    alert("Votre panier est vide !");
+    return;
+  }
 
+  if (wrongForm()) {
+    return;
+  }
   fetch("http://localhost:3000/api/products/order", {
     method: "POST",
     body: JSON.stringify(dataForm),
@@ -157,6 +162,7 @@ function dataFormArray() {
   const address = form.elements.address.value;
   const city = form.elements.city.value;
   const email = form.elements.email.value;
+  console.log(form.elements);
 
   const dataOrder = {
     contact: {
@@ -176,4 +182,87 @@ function getIdLocaleStorage(productId) {
   productsArray.push(productId);
 }
 console.log(productsArray);
-// // validation du formulaire.....................................
+// // validation du formulaire::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+// déclaration des regex.........................................................
+
+let regexLetters = /^[a-záàâäãåçéèêëíìîïñóòôöõúùûüýÿæœ\s-]{1,40}$/i;
+
+let regexNumbersLetters = /^[a-z0-9áàâäãåçéèêëíìîïñóòôöõúùûüýÿæœ\s-]{1,60}$/i;
+
+let regexEmail =
+  /^[a-zA-Z0-9æœ.!#$%&’*+/=?^_`{|}~"(),:;<>@[\]-]+@([\w-]+\.)+[\w-]{2,4}$/i;
+
+// getion des erreurs du formulaire..................................................
+
+function wrongForm() {
+  if (formFirstName()) {
+    return true;
+  }
+  if (formLastName()) {
+    return true;
+  }
+  if (formAddress()) {
+    return true;
+  }
+  if (formCity()) {
+    return true;
+  }
+  if (formEmail()) {
+    return true;
+  }
+  return;
+}
+
+// validation du prénom..........................................................................
+let errorMessage = "Caractère(s) non valide(s)";
+
+function formFirstName() {
+  const firstName = document.querySelector("#firstName").value;
+  if (regexLetters.test(firstName) === false) {
+    document.querySelector("#firstNameErrorMsg").innerHTML = errorMessage;
+    return true;
+  } else {
+    document.querySelector("#firstNameErrorMsg").innerHTML = "";
+  }
+}
+// validation du nom................................................................
+function formLastName() {
+  const lastName = document.querySelector("#lastName").value;
+  if (regexLetters.test(lastName) === false) {
+    document.querySelector("#lastNameErrorMsg").innerHTML = errorMessage;
+    return true;
+  } else {
+    document.querySelector("#lastNameErrorMsg").innerHTML = "";
+  }
+}
+// validation de l'adresse...........................................................
+function formAddress() {
+  const address = document.querySelector("#address").value;
+  if (regexNumbersLetters.test(address) === false) {
+    document.querySelector("#addressErrorMsg").innerHTML = errorMessage;
+    return true;
+  } else {
+    document.querySelector("#addressErrorMsg").innerHTML = "";
+  }
+}
+// validation de la ville........................................................
+function formCity() {
+  const city = document.querySelector("#city").value;
+  if (regexLetters.test(city) === false) {
+    document.querySelector("#cityErrorMsg").innerHTML = errorMessage;
+    return true;
+  } else {
+    document.querySelector("#cityErrorMsg").innerHTML = "";
+  }
+}
+// validation de l'email.............................................................
+function formEmail() {
+  const email = document.querySelector("#email").value;
+  if (regexEmail.test(email) === false) {
+    document.querySelector("#emailErrorMsg").innerHTML = errorMessage;
+    return true;
+  } else {
+    document.querySelector("#emailErrorMsg").innerHTML = "";
+  }
+}
