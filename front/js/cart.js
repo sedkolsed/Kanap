@@ -21,36 +21,43 @@ console.log(productList);
 let products = document.querySelector("#cart__items");
 let productsArray = [];
 
-for (let element of productList) {
-  let productId = element.id;
-  getIdLocaleStorage(productId);
+productListLoop();
+// boucle sur les éléments de productList................................................
+function productListLoop() {
+  for (let element of productList) {
+    let productId = element.id;
+    getIdLocaleStorage(productId);
+    displayHtml(productId, element);
+    listenQuantity(productId);
+    eraseItem(productId);
+  }
+}
 
-  fetch(`http://localhost:3000/api/products/${productId}`)
+async function displayHtml(productId, element) {
+  await fetch(`http://localhost:3000/api/products/${productId}`)
     .then((response) => response.json())
     .then((res) => {
       products.innerHTML += `<article class="cart__item" data-id="${element.id}" data-color="${element.color}">
-      <div class="cart__item__img">
-      <img src="${res.imageUrl}" alt=${res.altTxt}>
-      </div>
-      <div class="cart__item__content">
-      <div class="cart__item__content__description">
-      <h2>${res.name}</h2>
-      <p>${element.color}</p>
-      <p>${res.price} €</p>
-      </div>
-      <div class="cart__item__content__settings">
-      <div class="cart__item__content__settings__quantity">
-      <p>Qté : </p>
-      <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value=${element.quantity}>
-      </div>
-      <div class="cart__item__content__settings__delete">
-      <p class="deleteItem">Supprimer</p>
-      </div>
-      </div>
-      </div>
-      </article> `;
-      listenQuantity(productId);
-      eraseItem(productId);
+    <div class="cart__item__img">
+    <img src="${res.imageUrl}" alt=${res.altTxt}>
+    </div>
+    <div class="cart__item__content">
+    <div class="cart__item__content__description">
+    <h2>${res.name}</h2>
+    <p>${element.color}</p>
+    <p>${res.price} €</p>
+    </div>
+    <div class="cart__item__content__settings">
+    <div class="cart__item__content__settings__quantity">
+    <p>Qté : </p>
+    <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value=${element.quantity}>
+    </div>
+    <div class="cart__item__content__settings__delete">
+    <p class="deleteItem">Supprimer</p>
+    </div>
+    </div>
+    </div>
+    </article> `;
     });
 }
 
@@ -59,11 +66,13 @@ for (let element of productList) {
 function listenQuantity(productId) {
   console.log(productId);
   let changeQuantity = document.querySelectorAll(".itemQuantity");
+
   console.log(changeQuantity);
+
   // changeQuantity.addEventListener("input", console.log(productId));
 
   changeQuantity.forEach((section) => {
-    section.addEventListener("input", () => console.log(productId));
+    section.addEventListener("click", () => console.log(productId));
 
     console.log(productId);
   });
@@ -187,7 +196,7 @@ function getIdLocaleStorage(productId) {
 console.log(productsArray);
 // // validation du formulaire::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-// déclaration des regex.........................................................
+// déclarations des regex.........................................................
 
 let regexLetters = /^[a-záàâäãåçéèêëíìîïñóòôöõúùûüýÿæœ\s-]{1,40}$/i;
 
@@ -196,7 +205,7 @@ let regexNumbersLetters = /^[a-z0-9áàâäãåçéèêëíìîïñóòôöõú�
 let regexEmail =
   /^[a-zA-Z0-9æœ.!#$%&’*+/=?^_`{|}~"(),:;<>@[\]-]+@([\w-]+\.)+[\w-]{2,4}$/i;
 
-// getion des erreurs du formulaire..................................................
+// gestion des erreurs du formulaire..................................................
 
 function wrongForm() {
   if (
