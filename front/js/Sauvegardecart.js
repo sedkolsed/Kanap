@@ -1,6 +1,5 @@
 let productList;
 let empty = document.querySelector("#cartAndFormContainer");
-let productsArray = [];
 
 // récupération de localStorage et gestion de panier vide.........................................
 
@@ -16,155 +15,73 @@ function getBasket() {
 }
 
 console.log(productList);
-// :::::::::::::::::::::::::
-productList.forEach((element) => displayproducts(element));
-
-function displayproducts(element) {
-  fetch(`http://localhost:3000/api/products/${element.id}`)
-    .then((response) => response.json())
-    .then((res) => {
-      createElement(res, element);
-    });
-}
-function createElement(res, element) {
-  const image = res.imageUrl;
-  const textAlt = res.altTxt;
-  const color = element.color;
-
-  const name = res.name;
-  const price = res.price;
-  const quantity = element.quantity;
-  const article = makeArticle(res, element);
-  const divImage = displayDivImage(image, textAlt);
-  displayArticle(article, divImage);
-  const cartItemContent = makeCartItemContent(article);
-  const cartDescription = makeCartDescription(cartItemContent);
-  const nameH2 = makeNameH2(name, cartDescription);
-  const colorDescription = makeColorDescription(color, cartDescription);
-  const priceDescription = makePriceDescription(price, cartDescription);
-
-  console.log(article);
-  // displayName(name);
-}
-function makeArticle(res, element) {
-  const article = document.createElement("article");
-  article.classList.add("card__item");
-  article.dataset.id = res._id;
-  article.dataset.color = element.color;
-  return article;
-}
-
-function displayArticle(article, divImage) {
-  document.querySelector("#cart__items").appendChild(article);
-  article.appendChild(divImage);
-}
-
-function displayDivImage(image, textAlt) {
-  const div = document.createElement("div");
-  div.classList.add("cart__item__img");
-  displayImage(image, textAlt, div);
-  return div;
-}
-
-function displayImage(image, textAlt, div) {
-  const img = document.createElement("img");
-  img.src = image;
-  img.altTxt = textAlt;
-  div.appendChild(img);
-}
-function makeCartItemContent(article) {
-  const divContent = document.createElement("div");
-  divContent.classList.add("cart__item__content");
-  article.appendChild(divContent);
-  return divContent;
-}
-
-function makeCartDescription(cartItemContent) {
-  const divDescription = document.createElement("div");
-  divDescription.classList.add("cart__item__content__description");
-  cartItemContent.appendChild(divDescription);
-  return divDescription;
-}
-function makeNameH2(name, cartDescription) {
-  const articleName = document.createElement("h2");
-  articleName.innerHTML = name;
-  cartDescription.appendChild(articleName);
-}
-function makeColorDescription(color, cartDescription) {
-  const colorDescription = document.createElement("p");
-  colorDescription.innerHTML = color;
-  cartDescription.appendChild(colorDescription);
-}
-function makePriceDescription(price, cartDescription) {
-  const priceDescription = document.createElement("p");
-  priceDescription.innerHTML = price + " €";
-  cartDescription.appendChild(priceDescription);
-}
+// :::::::::::::::::::::::::::::::::::::::::
 
 // ::::::::::::::::::::::::::::::::::::::::
 
 // Affichage dynamique de chaque article de orderList..........................................
 
-// let products = document.querySelector("#cart__items");
+let products = document.querySelector("#cart__items");
+let productsArray = [];
 
 productListLoop();
 // boucle sur les éléments de productList................................................
 function productListLoop() {
   for (let element of productList) {
-    // let specialIdQuantity = element.id + "_" + element.color;
-    // let specialIdDelete = element.id + element.color;
+    let specialIdQuantity = element.id + "_" + element.color;
+    let specialIdDelete = element.id + element.color;
 
-    // console.log(specialIdQuantity);
+    console.log(specialIdQuantity);
 
     let productId = element.id;
     getIdLocaleStorage(productId);
-    // displayHtml(productId, element, specialIdQuantity, specialIdDelete);
+    displayHtml(productId, element, specialIdQuantity, specialIdDelete);
   }
 }
 
-// function displayHtml(productId, element, specialIdQuantity, specialIdDelete) {
-//   fetch(`http://localhost:3000/api/products/${productId}`)
-//     .then((response) => response.json())
-//     .then((res) => {
-//       products.innerHTML += `<article class="cart__item" data-id="${element.id}" data-color="${element.color}">
-//     <div class="cart__item__img">
-//     <img src="${res.imageUrl}" alt=${res.altTxt}>
-//     </div>
-//     <div class="cart__item__content">
-//     <div class="cart__item__content__description">
-//     <h2>${res.name}</h2>
-//     <p>${element.color}</p>
-//     <p>${res.price} €</p>
-//     </div>
-//     <div class="cart__item__content__settings">
-//     <div class="cart__item__content__settings__quantity">
-//     <p>Qté : </p>
-//     <input type="number" class="itemQuantity" id="${specialIdQuantity}" name="itemQuantity" min="1" max="100" value=${element.quantity}>
-//     </div>
-//     <div class="cart__item__content__settings__delete">
-//     <p class="deleteItem" id="${specialIdDelete}" >Supprimer</p>
-//     </div>
-//     </div>
-//     </div>
-//     </article> `;
+function displayHtml(productId, element, specialIdQuantity, specialIdDelete) {
+  fetch(`http://localhost:3000/api/products/${productId}`)
+    .then((response) => response.json())
+    .then((res) => {
+      products.innerHTML += `<article class="cart__item" data-id="${element.id}" data-color="${element.color}">
+    <div class="cart__item__img">
+    <img src="${res.imageUrl}" alt=${res.altTxt}>
+    </div>
+    <div class="cart__item__content">
+    <div class="cart__item__content__description">
+    <h2>${res.name}</h2>
+    <p>${element.color}</p>
+    <p>${res.price} €</p>
+    </div>
+    <div class="cart__item__content__settings">
+    <div class="cart__item__content__settings__quantity">
+    <p>Qté : </p>
+    <input type="number" class="itemQuantity" id="${specialIdQuantity}" name="itemQuantity" min="1" max="100" value=${element.quantity}>
+    </div>
+    <div class="cart__item__content__settings__delete">
+    <p class="deleteItem" id="${specialIdDelete}" >Supprimer</p>
+    </div>
+    </div>
+    </div>
+    </article> `;
 
-//       listenQuantity(productId, specialIdQuantity);
-//       eraseItem(productId);
-//     });
-// }
+      listenQuantity(productId, specialIdQuantity);
+      eraseItem(productId);
+    });
+}
 
 // écoute sur les changements de quantités........................................
 
-// function listenQuantity(productId, specialIdQuantity) {
-//   let changeOnQuantity = document.getElementById(specialIdQuantity);
-//   console.log(changeOnQuantity);
+function listenQuantity(productId, specialIdQuantity) {
+  let changeOnQuantity = document.getElementById(specialIdQuantity);
+  console.log(changeOnQuantity);
 
-//   changeOnQuantity.addEventListener("click", () => updateQuantity(productId));
-//   function updateQuantity(productId) {
-//     console.log(changeOnQuantity.value);
-//     console.log(productId);
-//   }
-// }
+  changeOnQuantity.addEventListener("click", () => updateQuantity(productId));
+  function updateQuantity(productId) {
+    console.log(changeOnQuantity.value);
+    console.log(productId);
+  }
+}
 // let changeQuantity = document.querySelectorAll(".itemQuantity");
 
 // console.log(changeQuantity);
@@ -191,17 +108,17 @@ function productListLoop() {
 
 // suppression des articles....................................................
 
-// function eraseItem(productId) {
-//   let eraseItem = document.querySelectorAll(".deleteItem");
-//   console.log(eraseItem);
+function eraseItem(productId) {
+  let eraseItem = document.querySelectorAll(".deleteItem");
+  console.log(eraseItem);
 
-//   eraseItem.forEach((section) => {
-//     section.addEventListener("click", () => eraseObject(productId));
-//   });
-// }
-// function eraseObject(productId) {
-//   console.log(productId);
-// }
+  eraseItem.forEach((section) => {
+    section.addEventListener("click", () => eraseObject(productId));
+  });
+}
+function eraseObject(productId) {
+  console.log(productId);
+}
 
 // quantité totale des articles...............................................
 
