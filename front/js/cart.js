@@ -17,6 +17,8 @@ function getBasket() {
 
 console.log(productList);
 // :::::::::::::::::::::::::
+
+// Boucle sur les éléments du locaStorage qui lance la requête API.................................
 productList.forEach((element) => displayproducts(element));
 
 function displayproducts(element) {
@@ -26,11 +28,11 @@ function displayproducts(element) {
       createElement(res, element);
     });
 }
+// regroupe les constantes et fonction d'affichage du panier....................................
 function createElement(res, element) {
   const image = res.imageUrl;
   const textAlt = res.altTxt;
   const color = element.color;
-
   const name = res.name;
   const price = res.price;
   const quantity = element.quantity;
@@ -39,69 +41,130 @@ function createElement(res, element) {
   displayArticle(article, divImage);
   const cartItemContent = makeCartItemContent(article);
   const cartDescription = makeCartDescription(cartItemContent);
-  const nameH2 = makeNameH2(name, cartDescription);
-  const colorDescription = makeColorDescription(color, cartDescription);
-  const priceDescription = makePriceDescription(price, cartDescription);
+  makeNameH2(name, cartDescription);
+  makeColorDescription(color, cartDescription);
+  makePriceDescription(price, cartDescription);
+  const cartItemSettings = makeCartSettings(cartItemContent);
+  const cartSettingsQuantity = makeSettingsQuantity(cartItemSettings);
+  makePQuantity(cartSettingsQuantity);
+  makeInputQuantity(cartSettingsQuantity, quantity);
+  const divDelete = makeDivDelete(cartItemSettings);
+  makeDelete(divDelete);
 
   console.log(article);
   // displayName(name);
 }
+// création de la balise <article> ...............................................
 function makeArticle(res, element) {
   const article = document.createElement("article");
-  article.classList.add("card__item");
+  article.classList.add("cart__item");
   article.dataset.id = res._id;
   article.dataset.color = element.color;
   return article;
 }
-
+// Insertion de la balise <article> dans le code HTML...................
 function displayArticle(article, divImage) {
   document.querySelector("#cart__items").appendChild(article);
   article.appendChild(divImage);
 }
-
+// Création de <div class=cart__item__img>...........................................
 function displayDivImage(image, textAlt) {
   const div = document.createElement("div");
   div.classList.add("cart__item__img");
   displayImage(image, textAlt, div);
   return div;
 }
-
+// Création et insertion de l'image du produit...........................................
 function displayImage(image, textAlt, div) {
   const img = document.createElement("img");
   img.src = image;
-  img.altTxt = textAlt;
+  img.alt = textAlt;
+  console.log(textAlt);
   div.appendChild(img);
+  return img;
 }
+// Création et insertion de <div class=cart__item__content>.................................
 function makeCartItemContent(article) {
   const divContent = document.createElement("div");
   divContent.classList.add("cart__item__content");
   article.appendChild(divContent);
   return divContent;
 }
-
+// Création et insertion de <div class = cart__item__content__description>......................
 function makeCartDescription(cartItemContent) {
   const divDescription = document.createElement("div");
   divDescription.classList.add("cart__item__content__description");
   cartItemContent.appendChild(divDescription);
   return divDescription;
 }
+// Affichage du nom du produit..........................................................
 function makeNameH2(name, cartDescription) {
   const articleName = document.createElement("h2");
   articleName.innerHTML = name;
   cartDescription.appendChild(articleName);
 }
+// Affichage de la couleur du produit..................................................
 function makeColorDescription(color, cartDescription) {
   const colorDescription = document.createElement("p");
   colorDescription.innerHTML = color;
   cartDescription.appendChild(colorDescription);
 }
+
+// Affichage du prix du produit...................................................
 function makePriceDescription(price, cartDescription) {
   const priceDescription = document.createElement("p");
   priceDescription.innerHTML = price + " €";
   cartDescription.appendChild(priceDescription);
 }
 
-// ::::::::::::::::::::::::::::::::::::::::
+//  Création et insertion de <div class= cart__item__content__settings>..............................
+function makeCartSettings(cartItemContent) {
+  const divSettings = document.createElement("div");
+  divSettings.classList.add("cart__item__content__settings");
+  cartItemContent.appendChild(divSettings);
+  return divSettings;
+}
+
+// Création et insertion de <div class = cart__item__content__settings__quantity>....................
+function makeSettingsQuantity(cartItemSettings) {
+  const divQuantity = document.createElement("div");
+  divQuantity.classList.add("cart__item__content__settings__quantity");
+  cartItemSettings.appendChild(divQuantity);
+  return divQuantity;
+}
+// Création et insertion de <pQuantity>..........................................
+function makePQuantity(cartSettingsQuantity) {
+  const pQuantity = document.createElement("p");
+  pQuantity.innerHTML = "Qté : ";
+  cartSettingsQuantity.appendChild(pQuantity);
+}
+// Création et insertion de l'<input> pour les changements de quantité.....................
+function makeInputQuantity(cartSettingsQuantity, quantity) {
+  const inputQuantity = document.createElement("input");
+  inputQuantity.type = "number";
+  inputQuantity.classList.add("itemQuantity");
+  inputQuantity.name = "itemQuantity";
+  inputQuantity.min = "1";
+  inputQuantity.max = "100";
+  inputQuantity.value = quantity;
+  cartSettingsQuantity.appendChild(inputQuantity);
+}
+// Création et insertion de <div class=cart__item__content__settings__delete>..........................
+function makeDivDelete(cartItemSettings) {
+  const divDelete = document.createElement("div");
+  divDelete.classList.add("cart__item__content__settings__delete");
+  cartItemSettings.appendChild(divDelete);
+  return divDelete;
+}
+// Création de la fonction de suppression d'article...............................................
+function makeDelete(divDelete) {
+  const deleteProduct = document.createElement("p");
+  deleteProduct.classList.add("deleteItem");
+  deleteProduct.innerHTML = "Supprimer";
+  divDelete.appendChild(deleteProduct);
+}
+
+// ::::::::::::::::::::::::::::::::::::::::<input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="42">
 
 // Affichage dynamique de chaque article de orderList..........................................
 
