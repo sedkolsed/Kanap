@@ -19,15 +19,18 @@ console.log(productList);
 // :::::::::::::::::::::::::
 
 // Boucle sur les éléments du locaStorage qui lance la requête API.................................
-productList.forEach((element) => displayproducts(element));
+loopLocal();
+function loopLocal() {
+  productList.forEach((element) => displayproducts(element));
 
-function displayproducts(element) {
-  fetch(`http://localhost:3000/api/products/${element.id}`)
-    .then((response) => response.json())
-    .then((res) => {
-      createElement(res, element);
-      return;
-    });
+  function displayproducts(element) {
+    fetch(`http://localhost:3000/api/products/${element.id}`)
+      .then((response) => response.json())
+      .then((res) => {
+        createElement(res, element);
+        return;
+      });
+  }
 }
 // regroupe les constantes et fonctions d'affichage du panier....................................
 function createElement(res, element) {
@@ -54,7 +57,7 @@ function createElement(res, element) {
   const cartSettingsQuantity = makeSettingsQuantity(cartItemSettings);
   makePQuantity(cartSettingsQuantity);
   makeInputQuantity(cartSettingsQuantity, quantity, specialId1);
-  quantityListener(id, specialId1);
+  quantityListener(id, specialId1, color);
   const divDelete = makeDivDelete(cartItemSettings);
   makeDelete(divDelete, specialId2);
   eraseListener(id, specialId2);
@@ -158,9 +161,11 @@ function makeInputQuantity(cartSettingsQuantity, quantity, specialId1) {
   cartSettingsQuantity.appendChild(inputQuantity);
 }
 //  Ecoute sur le changement de quantité.....................................................
-function quantityListener(id, specialId1) {
+function quantityListener(id, specialId1, color) {
   let quantityListener = document.getElementById(specialId1);
-  quantityListener.addEventListener("click", () => changeQuantity(id));
+  quantityListener.addEventListener("click", () =>
+    changeQuantity(id, specialId1, color)
+  );
 }
 // Création et insertion de <div class=cart__item__content__settings__delete>..........................
 function makeDivDelete(cartItemSettings) {
@@ -186,8 +191,23 @@ function eraseListener(id, specialId2) {
   eraseListener.addEventListener("click", () => eraseObject(id));
 }
 // ::::::::::::::::::::::::Changement de quantité::::::::::::::::::::::::::::::::
-function changeQuantity(id) {
-  console.log(id);
+function changeQuantity(id, specialId1, color) {
+  const value = document.getElementById(specialId1).value;
+  console.log(id, value, color);
+
+  let foundProduct = productList.find((p) => p.id == id && p.color == color);
+  if (foundProduct != undefined) {
+    foundProduct.quantity = Number(value);
+    console.log(foundProduct);
+
+    saveBasket(productList);
+    displayTotalQuantity();
+    displayTotalPrice();
+  }
+}
+// sauvegarde dans locaStorage.........................................
+function saveBasket(newBasket) {
+  localStorage.setItem("panierlocal", JSON.stringify(newBasket));
 }
 
 // :::::::::::::::::::::::Suppression d'articles:::::::::::::::::::::::::::::::
@@ -209,45 +229,10 @@ function productListLoop() {
   }
 }
 
-// écoute sur les changements de quantités........................................
-
-// function listenQuantity(productId, specialIdQuantity) {
-//   let changeOnQuantity = document.getElementById(specialIdQuantity);
-//   console.log(changeOnQuantity);
-
-//   changeOnQuantity.addEventListener("click", () => updateQuantity(productId));
-//   function updateQuantity(productId) {
-//     console.log(changeOnQuantity.value);
-//     console.log(productId);
-//   }
-// }
-// let changeQuantity = document.querySelectorAll(".itemQuantity");
-
-// console.log(changeQuantity);
-
 // for (var i = 0; i < changeQuantity.length; i++) {
 //   //Dans ton html, donne un id unique à ton élément liste, du genre productId_cpt où cpt est un compteur incrémenté à chaque ajout dans le panier
 //   var elem = document.getElementById("productId" + "_" + i);
 //   console.log(elem);
-
-//   // elem.addEventListener(
-//   //   "click",
-
-//   //   traitement(productId)
-//   // );
-// }
-
-// changeQuantity.addEventListener("input", console.log(productId));
-
-// });
-
-// function updateQuantity(productId) {
-//   console.log(productId);
-// }
-
-// suppression des articles....................................................
-
-// }
 
 // quantité totale des articles...............................................
 
