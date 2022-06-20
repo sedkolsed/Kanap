@@ -26,10 +26,16 @@ function displayproducts(element) {
     .then((response) => response.json())
     .then((res) => {
       createElement(res, element);
+      return;
     });
 }
-// regroupe les constantes et fonction d'affichage du panier....................................
+// regroupe les constantes et fonctions d'affichage du panier....................................
 function createElement(res, element) {
+  console.log(element.id);
+  const specialId1 = element.id + "_" + element.color;
+  const specialId2 = element.id + "__" + element.color;
+  console.log(specialId2);
+  const id = element.id;
   const image = res.imageUrl;
   const textAlt = res.altTxt;
   const color = element.color;
@@ -47,12 +53,13 @@ function createElement(res, element) {
   const cartItemSettings = makeCartSettings(cartItemContent);
   const cartSettingsQuantity = makeSettingsQuantity(cartItemSettings);
   makePQuantity(cartSettingsQuantity);
-  makeInputQuantity(cartSettingsQuantity, quantity);
+  makeInputQuantity(cartSettingsQuantity, quantity, specialId1);
+  quantityListener(id, specialId1);
   const divDelete = makeDivDelete(cartItemSettings);
-  makeDelete(divDelete);
+  makeDelete(divDelete, specialId2);
+  eraseListener(id, specialId2);
 
   console.log(article);
-  // displayName(name);
 }
 // création de la balise <article> ...............................................
 function makeArticle(res, element) {
@@ -139,8 +146,9 @@ function makePQuantity(cartSettingsQuantity) {
   cartSettingsQuantity.appendChild(pQuantity);
 }
 // Création et insertion de l'<input> pour les changements de quantité.....................
-function makeInputQuantity(cartSettingsQuantity, quantity) {
+function makeInputQuantity(cartSettingsQuantity, quantity, specialId1) {
   const inputQuantity = document.createElement("input");
+  inputQuantity.id = specialId1;
   inputQuantity.type = "number";
   inputQuantity.classList.add("itemQuantity");
   inputQuantity.name = "itemQuantity";
@@ -149,6 +157,11 @@ function makeInputQuantity(cartSettingsQuantity, quantity) {
   inputQuantity.value = quantity;
   cartSettingsQuantity.appendChild(inputQuantity);
 }
+//  Ecoute sur le changement de quantité.....................................................
+function quantityListener(id, specialId1) {
+  let quantityListener = document.getElementById(specialId1);
+  quantityListener.addEventListener("click", () => changeQuantity(id));
+}
 // Création et insertion de <div class=cart__item__content__settings__delete>..........................
 function makeDivDelete(cartItemSettings) {
   const divDelete = document.createElement("div");
@@ -156,14 +169,31 @@ function makeDivDelete(cartItemSettings) {
   cartItemSettings.appendChild(divDelete);
   return divDelete;
 }
-// Création de la fonction de suppression d'article...............................................
-function makeDelete(divDelete) {
+// Création de la balise de suppression d'article...............................................
+function makeDelete(divDelete, specialId2) {
   const deleteProduct = document.createElement("p");
+  deleteProduct.id = specialId2;
   deleteProduct.classList.add("deleteItem");
   deleteProduct.innerHTML = "Supprimer";
   divDelete.appendChild(deleteProduct);
 }
 
+// Ecoute sur la suppression d'article..............................................
+
+function eraseListener(id, specialId2) {
+  let eraseListener = document.getElementById(specialId2);
+  console.log(eraseListener);
+  eraseListener.addEventListener("click", () => eraseObject(id));
+}
+// ::::::::::::::::::::::::Changement de quantité::::::::::::::::::::::::::::::::
+function changeQuantity(id) {
+  console.log(id);
+}
+
+// :::::::::::::::::::::::Suppression d'articles:::::::::::::::::::::::::::::::
+function eraseObject(id) {
+  console.log(id);
+}
 // ::::::::::::::::::::::::::::::::::::::::<input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="42">
 
 // Affichage dynamique de chaque article de orderList..........................................
@@ -174,47 +204,10 @@ productListLoop();
 // boucle sur les éléments de productList................................................
 function productListLoop() {
   for (let element of productList) {
-    // let specialIdQuantity = element.id + "_" + element.color;
-    // let specialIdDelete = element.id + element.color;
-
-    // console.log(specialIdQuantity);
-
     let productId = element.id;
     getIdLocaleStorage(productId);
-    // displayHtml(productId, element, specialIdQuantity, specialIdDelete);
   }
 }
-
-// function displayHtml(productId, element, specialIdQuantity, specialIdDelete) {
-//   fetch(`http://localhost:3000/api/products/${productId}`)
-//     .then((response) => response.json())
-//     .then((res) => {
-//       products.innerHTML += `<article class="cart__item" data-id="${element.id}" data-color="${element.color}">
-//     <div class="cart__item__img">
-//     <img src="${res.imageUrl}" alt=${res.altTxt}>
-//     </div>
-//     <div class="cart__item__content">
-//     <div class="cart__item__content__description">
-//     <h2>${res.name}</h2>
-//     <p>${element.color}</p>
-//     <p>${res.price} €</p>
-//     </div>
-//     <div class="cart__item__content__settings">
-//     <div class="cart__item__content__settings__quantity">
-//     <p>Qté : </p>
-//     <input type="number" class="itemQuantity" id="${specialIdQuantity}" name="itemQuantity" min="1" max="100" value=${element.quantity}>
-//     </div>
-//     <div class="cart__item__content__settings__delete">
-//     <p class="deleteItem" id="${specialIdDelete}" >Supprimer</p>
-//     </div>
-//     </div>
-//     </div>
-//     </article> `;
-
-//       listenQuantity(productId, specialIdQuantity);
-//       eraseItem(productId);
-//     });
-// }
 
 // écoute sur les changements de quantités........................................
 
@@ -254,16 +247,6 @@ function productListLoop() {
 
 // suppression des articles....................................................
 
-// function eraseItem(productId) {
-//   let eraseItem = document.querySelectorAll(".deleteItem");
-//   console.log(eraseItem);
-
-//   eraseItem.forEach((section) => {
-//     section.addEventListener("click", () => eraseObject(productId));
-//   });
-// }
-// function eraseObject(productId) {
-//   console.log(productId);
 // }
 
 // quantité totale des articles...............................................
