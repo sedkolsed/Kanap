@@ -37,6 +37,7 @@ function createElement(res, element) {
   console.log(element.id);
   const specialId1 = element.id + "_" + element.color;
   const specialId2 = element.id + "__" + element.color;
+  const specialId3 = element.id + "___" + element.color;
   console.log(specialId2);
   const id = element.id;
   const image = res.imageUrl;
@@ -45,7 +46,7 @@ function createElement(res, element) {
   const name = res.name;
   const price = res.price;
   const quantity = element.quantity;
-  const article = makeArticle(res, element);
+  const article = makeArticle(res, element, specialId3);
   const divImage = displayDivImage(image, textAlt);
   displayArticle(article, divImage);
   const cartItemContent = makeCartItemContent(article);
@@ -60,13 +61,14 @@ function createElement(res, element) {
   quantityListener(id, specialId1, color);
   const divDelete = makeDivDelete(cartItemSettings);
   makeDelete(divDelete, specialId2);
-  eraseListener(id, specialId2);
+  eraseListener(id, specialId2, color, specialId3);
 
   console.log(article);
 }
 // création de la balise <article> ...............................................
-function makeArticle(res, element) {
+function makeArticle(res, element, specialId3) {
   const article = document.createElement("article");
+  article.id = specialId3;
   article.classList.add("cart__item");
   article.dataset.id = res._id;
   article.dataset.color = element.color;
@@ -185,10 +187,12 @@ function makeDelete(divDelete, specialId2) {
 
 // Ecoute sur la suppression d'article..............................................
 
-function eraseListener(id, specialId2) {
+function eraseListener(id, specialId2, color, specialId3) {
   let eraseListener = document.getElementById(specialId2);
   console.log(eraseListener);
-  eraseListener.addEventListener("click", () => eraseObject(id));
+  eraseListener.addEventListener("click", () =>
+    eraseObject(id, specialId2, color, specialId3)
+  );
 }
 // ::::::::::::::::::::::::Changement de quantité::::::::::::::::::::::::::::::::
 function changeQuantity(id, specialId1, color) {
@@ -210,18 +214,46 @@ function saveBasket(newBasket) {
   localStorage.setItem("panierlocal", JSON.stringify(newBasket));
 }
 
-// :::::::::::::::::::::::Suppression d'articles:::::::::::::::::::::::::::::::
-function eraseObject(id) {
-  console.log(id);
+// :::::::::::::::::::::::Fonction de suppression d'articles:::::::::::::::::::::::::::::::
+function eraseObject(id, specialId2, color, specialId3) {
+  let foundProduct = productList.findIndex(
+    (p) => p.id == id && p.color == color
+  );
+  productList.splice(foundProduct, 1);
+  console.log(productList);
+  deleteArticle(id, color, specialId3);
+  checkEmptyList();
+
+  saveBasket(productList);
+
+  displayTotalQuantity();
+  displayTotalPrice();
 }
-// ::::::::::::::::::::::::::::::::::::::::<input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="42">
+// Suppression de l'article de la page..................................................
+function deleteArticle(id, color, specialId3) {
+  const article = document.getElementById(specialId3);
+  console.log(article);
+  article.remove();
+}
+//  Fonction de vérification de l'absence d'article........................................
+function checkEmptyList() {
+  const listLength = productList.length;
+  console.log(listLength);
+  if (listLength == 0) {
+    clearLocalStorage();
+    getBasket();
+  } else {
+    return;
+  }
+}
+// Fonction de suppression des données du localStorage................................
+function clearLocalStorage() {
+  const local = window.localStorage;
+  local.clear();
+}
 
-// Affichage dynamique de chaque article de orderList..........................................
-
-// let products = document.querySelector("#cart__items");
-
-productListLoop();
 // boucle sur les éléments de productList................................................
+productListLoop();
 function productListLoop() {
   for (let element of productList) {
     let productId = element.id;
@@ -293,7 +325,6 @@ function storeForm(e) {
     method: "POST",
     body: JSON.stringify(dataForm),
     headers: {
-      // Accept: "application/json",
       "Content-Type": "application/json",
     },
   })
@@ -361,10 +392,15 @@ function wrongForm() {
 
 // validation du prénom..........................................................................
 let errorMessage = "Caractère(s) non valide(s)";
+let errorEmpty = "Ce champ est obligatoire";
 
 function formFirstName() {
   const firstName = document.querySelector("#firstName").value;
-  if (regexLetters.test(firstName) === false) {
+  console.log(firstName);
+  if (firstName == "") {
+    document.querySelector("#firstNameErrorMsg").innerHTML = errorEmpty;
+    return true;
+  } else if (regexLetters.test(firstName) === false) {
     document.querySelector("#firstNameErrorMsg").innerHTML = errorMessage;
     return true;
   } else {
@@ -374,7 +410,10 @@ function formFirstName() {
 // validation du nom................................................................
 function formLastName() {
   const lastName = document.querySelector("#lastName").value;
-  if (regexLetters.test(lastName) === false) {
+  if (lastName == "") {
+    document.querySelector("#lastNameErrorMsg").innerHTML = errorEmpty;
+    return true;
+  } else if (regexLetters.test(lastName) === false) {
     document.querySelector("#lastNameErrorMsg").innerHTML = errorMessage;
     return true;
   } else {
@@ -384,7 +423,10 @@ function formLastName() {
 // validation de l'adresse...........................................................
 function formAddress() {
   const address = document.querySelector("#address").value;
-  if (regexNumbersLetters.test(address) === false) {
+  if (address == "") {
+    document.querySelector("#addressErrorMsg").innerHTML = errorEmpty;
+    return true;
+  } else if (regexNumbersLetters.test(address) === false) {
     document.querySelector("#addressErrorMsg").innerHTML = errorMessage;
     return true;
   } else {
@@ -394,7 +436,10 @@ function formAddress() {
 // validation de la ville........................................................
 function formCity() {
   const city = document.querySelector("#city").value;
-  if (regexLetters.test(city) === false) {
+  if (city == "") {
+    document.querySelector("#cityErrorMsg").innerHTML = errorEmpty;
+    return true;
+  } else if (regexLetters.test(city) === false) {
     document.querySelector("#cityErrorMsg").innerHTML = errorMessage;
     return true;
   } else {
@@ -404,7 +449,10 @@ function formCity() {
 // validation de l'email.............................................................
 function formEmail() {
   const email = document.querySelector("#email").value;
-  if (regexEmail.test(email) === false) {
+  if (email == "") {
+    document.querySelector("#emailErrorMsg").innerHTML = errorEmpty;
+    return true;
+  } else if (regexEmail.test(email) === false) {
     document.querySelector("#emailErrorMsg").innerHTML = errorMessage;
     return true;
   } else {
