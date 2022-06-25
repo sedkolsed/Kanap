@@ -1,20 +1,22 @@
 // requête sur les produits de l'api............................................................
-fetch("http://localhost:3000/api/products")
-  .then(function (res) {
-    if (res.ok) {
-      return res.json();
-    }
-  })
-  .then(function (value) {
-    console.log(value);
-    canapes(value);
-  })
-  .catch(function (erreur) {
-    console.log("une erreur est survenue");
-  });
-
+firstRequest();
+function firstRequest() {
+  fetch("http://localhost:3000/api/products")
+    .then(function (res) {
+      if (res.ok) {
+        return res.json();
+      }
+    })
+    .then(function (value) {
+      // console.log(value);
+      kanap(value);
+    })
+    .catch(function (erreur) {
+      console.log("une erreur est survenue");
+    });
+}
 // affichage de tous les articles..............................................................
-function canapes(articles) {
+function kanap(articles) {
   let products = document.querySelector("#items");
 
   for (let article of articles) {

@@ -16,7 +16,6 @@ function getBasket() {
 }
 
 console.log(productList);
-// :::::::::::::::::::::::::
 
 // Boucle sur les éléments du locaStorage qui lance la requête API.................................
 loopLocal();
@@ -28,7 +27,9 @@ function loopLocal() {
       .then((response) => response.json())
       .then((res) => {
         createElement(res, element);
-        return;
+      })
+      .catch(function () {
+        console.log("une erreur est survenue");
       });
   }
 }
@@ -242,8 +243,6 @@ function checkEmptyList() {
   if (listLength == 0) {
     clearLocalStorage();
     getBasket();
-  } else {
-    return;
   }
 }
 // Fonction de suppression des données du localStorage................................
@@ -260,11 +259,6 @@ function productListLoop() {
     getIdLocaleStorage(productId);
   }
 }
-
-// for (var i = 0; i < changeQuantity.length; i++) {
-//   //Dans ton html, donne un id unique à ton élément liste, du genre productId_cpt où cpt est un compteur incrémenté à chaque ajout dans le panier
-//   var elem = document.getElementById("productId" + "_" + i);
-//   console.log(elem);
 
 // quantité totale des articles...............................................
 
@@ -299,6 +293,9 @@ function displayTotalPrice() {
         total += totalPriceByObject;
         console.log(total);
         totalPrice.textContent = total;
+      })
+      .catch(function (erreur) {
+        console.log("une erreur est survenue");
       });
   });
 }
@@ -331,7 +328,9 @@ function storeForm(e) {
     .then((res) => res.json())
     .then((data) => {
       redirectToConfirmation(data);
-      // return console.log(data);
+    })
+    .catch(function () {
+      console.log("une erreur est survenue");
     });
 }
 
@@ -379,11 +378,7 @@ let regexEmail =
 
 function wrongForm() {
   if (
-    formFirstName() |
-    formLastName() |
-    formAddress() |
-    formCity() |
-    formEmail()
+    (formFirstName(), formLastName(), formAddress(), formCity(), formEmail())
   ) {
     return true;
   }
@@ -405,6 +400,7 @@ function formFirstName() {
     return true;
   } else {
     document.querySelector("#firstNameErrorMsg").innerHTML = "";
+    return false;
   }
 }
 // validation du nom................................................................
@@ -418,6 +414,7 @@ function formLastName() {
     return true;
   } else {
     document.querySelector("#lastNameErrorMsg").innerHTML = "";
+    return false;
   }
 }
 // validation de l'adresse...........................................................
@@ -431,6 +428,7 @@ function formAddress() {
     return true;
   } else {
     document.querySelector("#addressErrorMsg").innerHTML = "";
+    return false;
   }
 }
 // validation de la ville........................................................
@@ -444,6 +442,7 @@ function formCity() {
     return true;
   } else {
     document.querySelector("#cityErrorMsg").innerHTML = "";
+    return false;
   }
 }
 // validation de l'email.............................................................
@@ -457,6 +456,7 @@ function formEmail() {
     return true;
   } else {
     document.querySelector("#emailErrorMsg").innerHTML = "";
+    return false;
   }
 }
 // redirection vers la page de confirmation avec le nuréro de commande......................................

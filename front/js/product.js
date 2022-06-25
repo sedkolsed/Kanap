@@ -1,9 +1,9 @@
 // Récupération de l'id avec urlsearchparams............................................
+
 const queryString = window.location.search;
-console.log(queryString);
+// console.log(queryString);
 const url = new URLSearchParams(queryString);
 const productId = url.get("_id");
-console.log({ productId });
 
 // requête sur l'id du produit et appel de la fonction productData..........................
 fetch(`http://localhost:3000/api/products/${productId}`)
@@ -11,6 +11,9 @@ fetch(`http://localhost:3000/api/products/${productId}`)
   .then((res) => {
     console.log(res);
     productData(res);
+  })
+  .catch(function () {
+    console.log("une erreur est survenue");
   });
 
 // création de la fonction productData et appel des fonctions d'affichage......................................................
@@ -87,6 +90,8 @@ function noColorAndQuantity(color, quantity) {
   if (quantity == 0 || quantity == null) {
     alert(" Selectionnez une quantité");
     return true;
+  } else {
+    return false;
   }
 }
 // création du nouvel objet product.............................................................................
